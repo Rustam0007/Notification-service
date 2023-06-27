@@ -43,7 +43,7 @@ public class NotificationSendJob : IHostedService
                     var cardSql = "SELECT phone FROM card WHERE id = @CardId";
                     var cardPhone = connection.QueryFirstOrDefault<string>(cardSql, new {CardId = cardId});
 
-                    SendMessage.ToClient(cardPhone, message.EventDate, message.OrderType, message.Card,
+                    SmsClient.SendByPhoneNumber(cardPhone, message.EventDate, message.OrderType, message.Card,
                         message.WebsiteUrl);
                     
                     var updateSql = $"UPDATE notification SET isSend = @IsSend WHERE \"cardId\" = @CardId RETURNING *";

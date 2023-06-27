@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddHostedService<NotificationSendJob>();
-builder.Services.AddTransient<SendMessage>();
+builder.Services.AddTransient<SmsClient>();
 
 var app = builder.Build();
 
