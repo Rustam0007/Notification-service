@@ -2,11 +2,14 @@
 
 public class SmsClient
 {
-    public static void SendByPhoneNumber(object phone, object data)
+    public static void SendByPhoneNumber(string phone, string data, string operationType, string card, string resourse)
     {
         Console.WriteLine($"\nОтправка смс на номер: {phone}\n");
         
-        Console.Write($@"Дата: {data}\n");
+        Console.Write($"Дата: {data}\n" +
+                      $"Тип операции: {operationType}\n" +
+                      $"Карта: {card}\n" +
+                      $"Ресурс: {resourse}\n\n");
     }
 }
 
