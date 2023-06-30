@@ -16,6 +16,6 @@ public class NotificationRequest
 
 public class NotificationResponse
 {
-    public long Id { get; set; }
+    public int Id { get; set; }
 
 }

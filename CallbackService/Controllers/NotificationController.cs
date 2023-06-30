@@ -20,4 +20,10 @@ public class NotificationController : ControllerBase
     {
         return _notificationService.Create(request);
     }
+    
+    [HttpGet("Get")]
+    public Response<IEnumerable<NotificationJoin>> GetUnsend()
+    {
+        return _notificationService.GetFalse();
+    }
 }

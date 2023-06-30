@@ -20,24 +20,20 @@ public class DatabaseService : IDatabaseService
         return conn;
     }
     
-    public long InsertNotification(int cardId, string message)
+    public int InsertNotification(int cardId, string message)  
     {
         var conn = GetNgpsqlConnection();
-    
-        
+
         var sql = $"INSERT INTO notification (card_id, message, is_send) VALUES (@CardId, @Message, @IsSend) RETURNING id";
-        var notificationId = (long)conn.ExecuteScalar(sql, new { cardId, message, IsSend = false });
-        
-        return notificationId;
+        return (int)conn.ExecuteScalar(sql, new { CardId = cardId, Message = message, IsSend = false });
     }
 
     public IEnumerable <NotificationJoin> GetUnsendNotification()
     {
         var conn = GetNgpsqlConnection();
         
-        var sql = $"SELECT n.id, n.message, c.phone FROM notification n JOIN card c ON n.card_id = c.id WHERE not n.is_Send";
+        var sql = $"Select n.id, n.message, c.phone FROM notification n INNER JOIN card c on c.id = n.card_id WHERE not n.is_send";
         return conn.Query<NotificationJoin>(sql);
-        
     }
 
     public void UpdateNotificationStatus(int notificationId)
