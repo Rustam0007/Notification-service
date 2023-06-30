@@ -1,33 +1,38 @@
-﻿using CallbackService.Models;
-using Npgsql;
-using Dapper;
+﻿using CallbackService.Enums;
+using CallbackService.Models;
+using CallbackService.Models.DTO;
+using CallbackService.Repository;
 using Newtonsoft.Json;
 
 namespace CallbackService.Services;
 public class NotificationService
 {
-    private static string? _connString;
-    public NotificationService(IConfiguration configuration)
+    private readonly IDatabaseService _db;
+    public NotificationService(IDatabaseService db)
     {
-        _connString = configuration["DBConnectionString"];
+        _db = db;
     }
-    private NpgsqlConnection GetNgpsqlConnection()
-    {
-        var conn = new NpgsqlConnection(_connString);
-        conn.Open();
-        return conn;
-    }
-    public NotificationRes Create(NotificationReq notificationReq)
-    {
-        var conn = GetNgpsqlConnection();
-        var orderJson = JsonConvert.SerializeObject(notificationReq);
 
-        
-        var sql = $"INSERT INTO notification (\"cardId\", message, issend) VALUES (@CardId, @Message, @IsSend) RETURNING *";
-        var parameters = new {notificationReq.CardId, Message = orderJson, IsSend = false};
-        
-        var notification = conn.QueryFirst<NotificationRes>(sql, parameters);
-        
-        return notification;
+    public Response<NotificationResponse> Create(NotificationRequest request)
+    {
+        var response = new Response<NotificationResponse>();
+        var messageJson = JsonConvert.SerializeObject(request);
+        try
+        {
+            var notificationId = _db.InsertNotification(request.CardId, messageJson);
+
+            response.Code = (int) Errors.Approved;
+            response.Message = Errors.Approved.GetDescription();
+            response.Payload = new NotificationResponse
+            {
+                Id = notificationId
+            };
+        }
+        catch (Exception e)
+        {
+            response.Code = (int) Errors.InternalError;
+            response.Message = Errors.InternalError.GetDescription();
+        }
+        return response;
     }
 }

@@ -1,5 +1,6 @@
 using CallbackService;
 using CallbackService.JobManager;
+using CallbackService.Repository;
 using CallbackService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,9 +11,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<NotificationService>();
+builder.Services.AddTransient<NotificationService>();
 builder.Services.AddHostedService<NotificationSendJob>();
 builder.Services.AddTransient<SmsClient>();
+builder.Services.AddTransient<IDatabaseService, DatabaseService>();
 
 var app = builder.Build();
 

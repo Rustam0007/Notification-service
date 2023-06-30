@@ -1,4 +1,5 @@
 using CallbackService.Models;
+using CallbackService.Models.DTO;
 using CallbackService.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,8 +16,8 @@ public class NotificationController : ControllerBase
     }
 
     [HttpPost("Create")]
-    public NotificationRes Create([FromBody] NotificationReq notificationReq)
+    public Response<NotificationResponse> Create([FromBody] NotificationRequest request)
     {
-        return _notificationService.Create(notificationReq);
+        return _notificationService.Create(request);
     }
 }

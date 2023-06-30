@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CallbackService.Models;
 
-public class NotificationReq
+public class NotificationRequest
 {
     public string? OrderType { get; set; }
     public string? SessionId { get; set; }
@@ -14,8 +14,8 @@ public class NotificationReq
     public int CardId { get; set; }
 }
 
-public class NotificationRes
+public class NotificationResponse
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
 
 }
