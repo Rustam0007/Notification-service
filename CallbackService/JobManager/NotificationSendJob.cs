@@ -13,8 +13,9 @@ public class NotificationSendJob : IHostedService
     private Timer _timer;
     
     
-    public NotificationSendJob(ILogger<NotificationSendJob> logger)
+    public NotificationSendJob(ILogger<NotificationSendJob> logger, IDatabaseService db)
     {
+        _db = db;
         _logger = logger;
     }
     
@@ -29,13 +30,15 @@ public class NotificationSendJob : IHostedService
     {
         try
         {
-            // var notifications = _db.GetUnsendNotification();
-            // if (notifications == null)
-            // {
-            //     _logger.LogError("[Notifications list in null]");
-            // }
-            
-            Console.WriteLine("OK");
+            var notifications = _db.GetUnsendNotification();
+            foreach (var notification in notifications)
+            {
+                var messageJson = JsonConvert.DeserializeObject<NotificationRequest>(notification.Message);
+                SmsClient.SendByPhoneNumber(notification.Phone, messageJson.EventDate, messageJson.OrderType, 
+                    messageJson.Card, messageJson.WebsiteUrl);
+               
+                _db.UpdateNotificationStatus(notification.Id);
+            }
         }
         catch (Exception ex)
         {
@@ -45,7 +48,6 @@ public class NotificationSendJob : IHostedService
         {
             _logger.LogInformation($"Finished a cycle");
             _timer.Change(10000, Timeout.Infinite);
-            
         }
     }
 

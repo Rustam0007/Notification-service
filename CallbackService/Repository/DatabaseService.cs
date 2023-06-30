@@ -32,7 +32,7 @@ public class DatabaseService : IDatabaseService
     {
         var conn = GetNgpsqlConnection();
         
-        var sql = $"Select n.id, n.message, c.phone FROM notification n INNER JOIN card c on c.id = n.card_id WHERE not n.is_send";
+        var sql = $"SELECT n.id, n.message, c.phone FROM notification n INNER JOIN card c on c.id = n.card_id WHERE not n.is_send";
         return conn.Query<NotificationJoin>(sql);
     }
 
