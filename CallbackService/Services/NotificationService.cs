@@ -35,27 +35,4 @@ public class NotificationService
         }
         return response;
     }
-    
-    public Response<IEnumerable<NotificationJoin>> GetFalse()
-    {
-        var response = new Response<IEnumerable<NotificationJoin>>();
-
-        try
-        {
-            var notifications = _db.GetUnsendNotification();
-            
-        
-            response.Code = (int) Errors.Approved;
-            response.Message = Errors.Approved.GetDescription();
-            response.Payload = notifications;
-
-
-        }
-        catch (Exception e)
-        {
-            response.Code = (int) Errors.InternalError;
-            response.Message = Errors.InternalError.GetDescription();
-        }
-        return response;
-    }
 }
