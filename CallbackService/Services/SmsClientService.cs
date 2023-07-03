@@ -1,8 +1,8 @@
 ﻿namespace CallbackService;
 
-public class SmsClient
+public class SmsClient : ISmsClient
 {
-    public static void SendByPhoneNumber(string phone, string data, string operationType, string card, string resourse)
+    public void SendByPhoneNumber(string phone, string data, string operationType, string card, string resourse)
     {
         Console.WriteLine($"\nОтправка смс на номер: {phone}\n");
         

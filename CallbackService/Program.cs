@@ -11,9 +11,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddTransient<NotificationService>();
+builder.Services.AddSingleton<NotificationService>();
 builder.Services.AddHostedService<NotificationSendJob>();
-builder.Services.AddTransient<SmsClient>();
+builder.Services.AddSingleton<SmsClient>();
 builder.Services.AddTransient<IDatabaseService, DatabaseService>();
 
 var app = builder.Build();

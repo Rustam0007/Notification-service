@@ -1,8 +1,6 @@
 ﻿using CallbackService.Models;
 using CallbackService.Repository;
-using Dapper;
 using Newtonsoft.Json;
-using Npgsql;
 
 namespace CallbackService.JobManager;
 
@@ -34,7 +32,9 @@ public class NotificationSendJob : IHostedService
             foreach (var notification in notifications)
             {
                 var messageJson = JsonConvert.DeserializeObject<NotificationRequest>(notification.Message);
-                SmsClient.SendByPhoneNumber(notification.Phone, messageJson.EventDate, messageJson.OrderType, 
+                
+                var smsClient = new SmsClient();
+                smsClient.SendByPhoneNumber(notification.Phone, messageJson.EventDate, messageJson.OrderType, 
                     messageJson.Card, messageJson.WebsiteUrl);
                
                 _db.UpdateNotificationStatus(notification.Id);
