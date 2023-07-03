@@ -8,8 +8,10 @@ namespace CallbackService.Services;
 public class NotificationService
 {
     private readonly IDatabaseService _db;
-    public NotificationService(IDatabaseService db)
+    private readonly ILogger _logger;
+    public NotificationService(IDatabaseService db, ILoggerFactory loggerFactory)
     {
+        _logger = loggerFactory.CreateLogger(GetType().Name);
         _db = db;
     }
 
@@ -32,6 +34,7 @@ public class NotificationService
         {
             response.Code = (int) Errors.InternalError;
             response.Message = Errors.InternalError.GetDescription();
+            _logger.LogError(e, "Failed to insert notification");
         }
         return response;
     }
