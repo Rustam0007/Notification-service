@@ -8,12 +8,14 @@ public class NotificationSendJob : IHostedService
 {
     private readonly IDatabaseService _db;
     private readonly ILogger<NotificationSendJob> _logger;
+    private readonly ISmsClient _smsClient;
     private Timer _timer;
     
     
-    public NotificationSendJob(ILogger<NotificationSendJob> logger, IDatabaseService db)
+    public NotificationSendJob(ILogger<NotificationSendJob> logger, IDatabaseService db, ISmsClient smsClient)
     {
         _db = db;
+        _smsClient = smsClient;
         _logger = logger;
     }
     
@@ -33,8 +35,7 @@ public class NotificationSendJob : IHostedService
             {
                 var messageJson = JsonConvert.DeserializeObject<NotificationRequest>(notification.Message);
                 
-                var smsClient = new SmsClient();
-                smsClient.SendByPhoneNumber(notification.Phone, messageJson.EventDate, messageJson.OrderType, 
+                _smsClient.SendByPhoneNumber(notification.Phone, messageJson.EventDate, messageJson.OrderType, 
                     messageJson.Card, messageJson.WebsiteUrl);
                
                 _db.UpdateNotificationStatus(notification.Id);

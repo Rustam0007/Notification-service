@@ -22,7 +22,7 @@ public class DatabaseService : IDatabaseService
     
     public int InsertNotification(int cardId, string message)  
     {
-        var conn = GetNgpsqlConnection();
+        using var conn = GetNgpsqlConnection();
 
         var sql = $"INSERT INTO notification (card_id, message, is_send) VALUES (@CardId, @Message, @IsSend) RETURNING id";
         return (int)conn.ExecuteScalar(sql, new { CardId = cardId, Message = message, IsSend = false });
@@ -30,7 +30,7 @@ public class DatabaseService : IDatabaseService
 
     public IEnumerable <NotificationJoin> GetUnsendNotification()
     {
-        var conn = GetNgpsqlConnection();
+        using var conn = GetNgpsqlConnection();
         
         var sql = $"SELECT n.id, n.message, c.phone FROM notification n INNER JOIN card c on c.id = n.card_id WHERE not n.is_send";
         return conn.Query<NotificationJoin>(sql);
@@ -38,7 +38,7 @@ public class DatabaseService : IDatabaseService
 
     public void UpdateNotificationStatus(int notificationId)
     {
-        var conn = GetNgpsqlConnection();
+        using var conn = GetNgpsqlConnection();
 
         var sql = $"UPDATE notification SET is_send = @IsSend WHERE id = @Id";
         var parameters = new { IsSend = true, Id = notificationId };

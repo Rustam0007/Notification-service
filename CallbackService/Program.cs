@@ -1,5 +1,6 @@
 using CallbackService;
 using CallbackService.JobManager;
+using CallbackService.Models;
 using CallbackService.Repository;
 using CallbackService.Services;
 
@@ -13,7 +14,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<NotificationService>();
 builder.Services.AddHostedService<NotificationSendJob>();
-builder.Services.AddSingleton<SmsClient>();
+builder.Services.AddSingleton<ISmsClient, SmsClient>();
 builder.Services.AddTransient<IDatabaseService, DatabaseService>();
 
 var app = builder.Build();
@@ -27,6 +28,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
